@@ -11,10 +11,6 @@ class Wechatpayapp extends Base
 	//请求后返回的参数
 	protected $values = array();
 
-    public function __construct($config) {
-        $this->config = array_merge($this->config, $config);
-    }
-
     /**
      * 配置检查
      * @return [type] [description]
@@ -105,7 +101,7 @@ class Wechatpayapp extends Base
             'body' => $body,
             'out_trade_no' => $order_no,
             'total_fee' => $order_amount,
-            'spbill_create_ip' => PhalApi_Tool::getClientIp(),
+            'spbill_create_ip' => \PhalApi\Tool::getClientIp(),
             'notify_url' => $notify_url,
             'trade_type' => 'APP',
             'attach' => urlencode($attach),

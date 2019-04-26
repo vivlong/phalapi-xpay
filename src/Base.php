@@ -4,7 +4,6 @@ namespace PhalApi\Xpay;
 abstract class Base {
 
     protected $config;
-    protected $info;
 
     public function __construct($config) {
         $this->config = array_merge($this->config, $config);

@@ -8,10 +8,6 @@ class Alipayapp
 {
 	protected $config;
 
-    public function __construct($config) {
-        $this->config = array_merge($this->config, $config);
-    }
-
     /**
      * 配置检查
      * @return [type] [description]
