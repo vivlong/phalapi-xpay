@@ -1,0 +1,24 @@
+{
+    "name": "vivlong/phalapi-xpay",
+    "description": "PhalApi 2.x 扩展类库：第三方支付扩展，含微信支付和支付宝支付，支持APP支付",
+    "type": "library",
+    "keywords": [
+        "phalapi", "phalapi-xpay", "xpay"
+    ],
+    "license": "GPL-3.0+",
+    "minimum-stability": "dev",
+    "homepage": "https://www.phalapi.net/",
+    "authors": [
+        {
+            "name": "vivlong",
+            "email": "vivlonglz@gmail.com",
+            "homepage": "http://vivlong.github.io",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PhalApi\\Xpay\\": "src"
+        }
+    }
+}
