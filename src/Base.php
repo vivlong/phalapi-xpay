@@ -1,19 +1,23 @@
 <?php
+
 namespace PhalApi\Xpay;
 
-abstract class Base {
-
+abstract class Base
+{
     protected $config;
 
-    public function __construct($config) {
-        $this->config = array_merge($this->config, $config);
+    public function __construct($config)
+    {
+        $this->config = $config;
     }
 
     /**
-     * 配置检查
-     * @return boolean
+     * 配置检查.
+     *
+     * @return bool
      */
-    public function check() {
+    public function check()
+    {
         return true;
     }
 
@@ -23,29 +27,20 @@ abstract class Base {
     abstract public function verifyNotify($notify);
 
     /**
-     * 异步通知验证成功返回信息
+     * 异步通知验证成功返回信息.
      */
-    public function notifySuccess() {
-        echo "success";
+    public function notifySuccess()
+    {
+        echo 'success';
     }
 
     /**
-     * 异步通知验证失败返回信息
+     * 异步通知验证失败返回信息.
+     *
      * @return [type] [description]
      */
-    public function notifyError(){
-        echo "fail";
+    public function notifyError()
+    {
+        echo 'fail';
     }
-
-    final protected function formatPostkey($post, &$result, $key = '') {
-        foreach ($post as $k => $v) {
-            $_k = $key ? $key . '[' . $k . ']' : $k;
-            if (is_array($v)) {
-                $this->formatPostkey($v, $result, $_k);
-            } else {
-                $result[$_k] = $v;
-            }
-        }
-    }
-
 }
