@@ -15,7 +15,7 @@ PhalApi 2.x扩展类库，含微信支付和支付宝支付，支持APP支付。
      */
     'Xpay' =>  array(
         'alipayapp' => array(
-            'appId'             => '<yourAppId>',
+            'app_id'            => '<yourAppId>',
             'rsa_privateKey'    => '<yourRsaPrivateKey>',
             'rsa_publicKey'     => '<yourRsaPublicKey>',
             'notify_url'        => '<yourNotifyUrl>'
@@ -46,7 +46,7 @@ $di->xpay = function() {
     $xpay->set('wechatpayapp');
     $content = 'XX APP';
     $attach = '';
-    echo $xpay->getPrepayid($order_no, $order_amount, $content, $attach);
+    return $xpay->getPrepayid($order_no, $order_amount, $content, $attach);
 
     $di = \PhalApi\DI();
     $xpay = $di->xpay;
@@ -54,7 +54,7 @@ $di->xpay = function() {
     $title = 'XX APP';
     $subject = '';
     $passback_params = '';
-    echo $xpay->getOrderString($this->order_no, $this->order_amount, $title, $subject, $passback_params);
+    return $xpay->getOrderString($this->order_no, $this->order_amount, $title, $subject, $passback_params);
 ```  
 
 Notify回调使用方式：

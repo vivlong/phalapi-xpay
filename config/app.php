@@ -6,7 +6,7 @@ return array(
      */
     'Xpay' =>  array(
         'alipayapp' => array(
-            'appId'             => '<yourAppId>',
+            'app_id'            => '<yourAppId>',
             'rsa_privateKey'    => '<yourRsaPrivateKey>',
             'rsa_publicKey'     => '<yourRsaPublicKey>',
             'notify_url'        => '<yourNotifyUrl>'

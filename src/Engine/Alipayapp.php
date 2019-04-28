@@ -2,9 +2,11 @@
 
 namespace PhalApi\Xpay\Engine;
 
+use PhalApi\Xpay\Base;
+
 require_once dirname(dirname(__FILE__)).'/SDK/alipay/AopSdk.php';
 
-class Alipayapp
+class Alipayapp extends Base
 {
 	protected $config;
 
@@ -30,10 +32,10 @@ class Alipayapp
             $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
             $aop->appId = $this->config['app_id'];
             $aop->rsaPrivateKey = $this->config['rsa_privateKey'];
+            $aop->alipayrsaPublicKey = $this->config['rsa_publicKey'];
             $aop->format = 'json';
             $aop->charset = 'UTF-8';
             $aop->signType = 'RSA2';
-            $aop->alipayrsaPublicKey = $this->config['rsa_publicKey'];
             $request = new \AlipayTradeAppPayRequest();
             $bizObj = array(
                 'body' => strval($title),
@@ -41,6 +43,7 @@ class Alipayapp
                 'out_trade_no' => strval($out_trade_no),
                 'total_amount' => strval($total_amount),
                 'product_code' => 'QUICK_MSECURITY_PAY',
+                'goods_type' => strval(0),
                 'timeout_express' => strval($timeout_express),
                 'passback_params' => urlencode($passback_params),
             );
@@ -68,7 +71,7 @@ class Alipayapp
             if ($flag) {
                 return true;
             } else {
-                //SeasLog::log(SEASLOG_ERROR, 'rsaCheckV1 error');
+                \PhalApi\DI()->logger->error('Xpay\Alipayapp verifyNotify\ rsaCheckV1 error');
                 return true;
             }
         } else {
