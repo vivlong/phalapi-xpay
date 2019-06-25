@@ -90,9 +90,10 @@ class Alipayapp extends Base
         $info['status'] = ($notify['trade_status'] == 'TRADE_FINISHED' || $notify['trade_status'] == 'TRADE_SUCCESS') ? true : false;
         $info['money'] = $notify['total_fee'];
         //商户订单号
-        $info['out_trade_no'] = $notify['out_trade_no'];
+        $info['outTradeNo'] = $notify['out_trade_no'];
         //支付宝交易号
-        $info['trade_no'] = $notify['trade_no'];
+        $info['tradeNo'] = $notify['trade_no'];
+        $info['customData'] = $notify['passback_params'];
         $this->info = $info;
     }
 

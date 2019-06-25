@@ -272,9 +272,10 @@ class Wechatpayapp extends Base
         $info['status'] = ($notify['return_code'] == 'SUCCESS') ? true : false;
         $info['money'] = $notify['total_fee']/100;
         //商户订单号
-        $info['out_trade_no'] = $notify['out_trade_no'];
+        $info['outTradeNo'] = $notify['out_trade_no'];
         //微信交易号
-        $info['trade_no'] = $notify['transaction_id'];
+        $info['tradeNo'] = $notify['transaction_id'];
+        $info['customData'] = $notify['attach'];
         $this->info = $info;
     }
 }
