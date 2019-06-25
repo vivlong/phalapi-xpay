@@ -5,6 +5,7 @@ namespace PhalApi\Xpay;
 abstract class Base
 {
     protected $config;
+    protected $info;
 
     public function __construct($config)
     {
@@ -19,6 +20,14 @@ abstract class Base
     public function check()
     {
         return true;
+    }
+
+    /**
+     * 验证通过后获取订单信息
+     * @return type
+     */
+    public function getInfo() {
+        return $this->info;
     }
 
     /**

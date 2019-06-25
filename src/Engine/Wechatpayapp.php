@@ -79,6 +79,8 @@ class Wechatpayapp extends Base
 
             return false;
         }
+		//写入订单信息
+		$this->setInfo($this->values);
         return true;
     }
 
@@ -258,5 +260,21 @@ class Wechatpayapp extends Base
         libxml_disable_entity_loader($disableLibxmlEntityLoader);
 
         return $values;
+    }
+
+    /**
+     * 写入订单信息
+     * @param [type] $notify [description]
+     */
+    protected function setInfo($notify) {
+        $info = array();
+        //支付状态
+        $info['status'] = ($notify['return_code'] == 'SUCCESS') ? true : false;
+        $info['money'] = $notify['total_fee']/100;
+        //商户订单号
+        $info['out_trade_no'] = $notify['out_trade_no'];
+        //微信交易号
+        $info['trade_no'] = $notify['transaction_id'];
+        $this->info = $info;
     }
 }

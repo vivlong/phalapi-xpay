@@ -69,6 +69,7 @@ class Alipayapp extends Base
             $aop->alipayrsaPublicKey = $this->config['rsa_publicKey'];
             $flag = $aop->rsaCheckV1($notify, null, 'RSA2');
             if ($flag) {
+                $this->setInfo($notify);
                 return true;
             } else {
                 \PhalApi\DI()->logger->error('Xpay\Alipayapp verifyNotify\ rsaCheckV1 error');
@@ -77,6 +78,22 @@ class Alipayapp extends Base
         } else {
             return false;
         }
+    }
+
+    /**
+     * 写入订单信息
+     * @param [type] $notify [description]
+     */
+    protected function setInfo($notify) {
+        $info = array();
+        //支付状态
+        $info['status'] = ($notify['trade_status'] == 'TRADE_FINISHED' || $notify['trade_status'] == 'TRADE_SUCCESS') ? true : false;
+        $info['money'] = $notify['total_fee'];
+        //商户订单号
+        $info['out_trade_no'] = $notify['out_trade_no'];
+        //支付宝交易号
+        $info['trade_no'] = $notify['trade_no'];
+        $this->info = $info;
     }
 
 }
