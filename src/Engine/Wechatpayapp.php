@@ -79,9 +79,6 @@ class Wechatpayapp extends Base
 
             return false;
         }
-        //写入订单信息
-        $this->setInfo($this->values);
-
         return true;
     }
 
