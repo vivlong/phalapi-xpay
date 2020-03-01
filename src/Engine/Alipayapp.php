@@ -65,7 +65,7 @@ class Alipayapp extends Base
      */
     public function verifyNotify($notify) {
         if (!empty($notify['notify_time']) && !empty($notify['notify_type']) && !empty($notify['notify_id']) && !empty($notify['app_id']) && !empty($notify['out_trade_no'])) {
-            $aop = new AopClient();
+            $aop = new \AopClient();
             $aop->alipayrsaPublicKey = $this->config['rsa_publicKey'];
             $flag = $aop->rsaCheckV1($notify, null, 'RSA2');
             if ($flag) {
