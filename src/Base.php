@@ -23,10 +23,12 @@ abstract class Base
     }
 
     /**
-     * 验证通过后获取订单信息
+     * 验证通过后获取订单信息.
+     *
      * @return type
      */
-    public function getInfo() {
+    public function getInfo()
+    {
         return $this->info;
     }
 

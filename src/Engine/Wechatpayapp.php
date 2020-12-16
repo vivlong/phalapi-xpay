@@ -9,7 +9,7 @@ class Wechatpayapp extends Base
     protected $config;
 
     //请求后返回的参数
-    protected $values = array();
+    protected $values = [];
 
     /**
      * 配置检查.
@@ -18,8 +18,9 @@ class Wechatpayapp extends Base
      */
     public function check()
     {
+        $di = \PhalApi\DI();
         if (!$this->config['app_id'] || !$this->config['mch_id'] || !$this->config['app_key']) {
-            \PhalApi\DI()->logger->log('Xpay', 'Wechatpayapp setting error');
+            $di->logger->log(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, 'setting error');
 
             return false;
         }
@@ -34,30 +35,31 @@ class Wechatpayapp extends Base
      */
     public function getPrepayid($order_no, $order_amount, $content, $attach)
     {
+        $di = \PhalApi\DI();
         try {
             $app_id = $this->config['app_id'];
             $mch_id = $this->config['mch_id'];
             $notify_url = $this->config['notify_url'];
             $prepay_id = $this->generatePrepayId($app_id, $mch_id, $notify_url, $order_no, $order_amount, $content, $attach);
-            \PhalApi\DI()->logger->debug('Xpay\ getPrepayid \ prepay_id', $prepay_id);
+            $di->logger->debug(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['prepay_id' => $prepay_id]);
             if ($prepay_id) {
-                $response = array(
+                $response = [
                     'appid' => $app_id,
                     'partnerid' => $mch_id,
                     'prepayid' => $prepay_id,
                     'package' => 'Sign=WXPay',
                     'noncestr' => $this->createNoncestr(),
                     'timestamp' => time(),
-               );
+               ];
                 $response['sign'] = $this->getSign($response);
-                \PhalApi\DI()->logger->debug('Xpay\ getPrepayid \ response', $response);
+                $di->logger->debug(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['Response' => $response]);
 
                 return $response;
             } else {
                 return false;
             }
         } catch (Exception $e) {
-            \PhalApi\DI()->logger->error('Xpay\ getPrepayid', $e->getMessage());
+            $di->logger->error(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['Exception' => $e->getMessage()]);
 
             return false;
         }
@@ -68,19 +70,21 @@ class Wechatpayapp extends Base
      */
     public function verifyNotify($notify)
     {
+        $di = \PhalApi\DI();
         $this->values = $this->xmlToArray($notify);
-        if ($this->values['return_code'] != 'SUCCESS') {
-            \PhalApi\DI()->logger->log('Xpay', '支付失败', $this->values);
+        if ('SUCCESS' != $this->values['return_code']) {
+            $di->logger->info(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['支付失败' => $this->values]);
 
             return false;
         }
         if (!$this->checkSign()) {
-            \PhalApi\DI()->logger->log('Xpay', '签名错误', $this->values);
+            $di->logger->info(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['签名错误' => $this->values]);
 
             return false;
         }
-		//写入订单信息
-		$this->setInfo($this->values);
+        //写入订单信息
+        $this->setInfo($this->values);
+
         return true;
     }
 
@@ -89,7 +93,7 @@ class Wechatpayapp extends Base
      */
     public function notifySuccess()
     {
-        $return = array();
+        $return = [];
         $return['return_code'] = 'SUCCESS';
         $return['return_msg'] = 'OK';
         echo $this->arrayToXml($return);
@@ -102,7 +106,7 @@ class Wechatpayapp extends Base
      */
     public function notifyError()
     {
-        $return = array();
+        $return = [];
         $return['return_code'] = 'FAILED';
         $return['return_msg'] = 'FAILED';
         echo $this->arrayToXml($return);
@@ -110,7 +114,8 @@ class Wechatpayapp extends Base
 
     private function generatePrepayId($app_id, $mch_id, $notify_url, $order_no, $order_amount, $body, $attach)
     {
-        $params = array(
+        $di = \PhalApi\DI();
+        $params = [
             'appid' => $app_id,
             'mch_id' => $mch_id,
             'nonce_str' => $this->createNoncestr(),
@@ -122,17 +127,17 @@ class Wechatpayapp extends Base
             'trade_type' => 'APP',
             'limit_pay' => 'no_credit',
             'attach' => urlencode($attach),
-        );
+        ];
         $params['sign'] = $this->getSign($params);
-        \PhalApi\DI()->logger->debug('Xpay\ getPrepayid\ generatePrepayId', $params);
+        $di->logger->debug(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['Params' => $params]);
         $xml = $this->getXMLFromArray($params);
         $curl = new \PhalApi\CUrl(1);
-        $curl->setHeader(array('Content-Type: text/xml'));
+        $curl->setHeader(['Content-Type: text/xml']);
         $response = $curl->post('https://api.mch.weixin.qq.com/pay/unifiedorder', $xml);
         $this->values = $this->xmlToArray($response);
-        \PhalApi\DI()->logger->debug('Xpay\ getPrepayid\ generatePrepayId\ response', $this->values);
-        if (array_key_exists('return_code', $this->values) && $this->values['return_code'] == 'SUCCESS') {
-            if (array_key_exists('result_code', $this->values) && $this->values['result_code'] == 'SUCCESS') {
+        $di->logger->debug(__NAMESPACE__.DIRECTORY_SEPARATOR.__CLASS__.DIRECTORY_SEPARATOR.__FUNCTION__, ['Response' => $this->values]);
+        if (array_key_exists('return_code', $this->values) && 'SUCCESS' == $this->values['return_code']) {
+            if (array_key_exists('result_code', $this->values) && 'SUCCESS' == $this->values['result_code']) {
                 if (array_key_exists('prepay_id', $this->values)) {
                     return (string) $this->values['prepay_id'];
                 }
@@ -214,7 +219,7 @@ class Wechatpayapp extends Base
     {
         $buff = '';
         foreach ($urlObj as $k => $v) {
-            if ($k != 'sign' && $v !== '') {
+            if ('sign' != $k && '' !== $v) {
                 $buff .= $k.'='.$v.'&';
             }
         }
@@ -263,14 +268,16 @@ class Wechatpayapp extends Base
     }
 
     /**
-     * 写入订单信息
+     * 写入订单信息.
+     *
      * @param [type] $notify [description]
      */
-    protected function setInfo($notify) {
-        $info = array();
+    protected function setInfo($notify)
+    {
+        $info = [];
         //支付状态
-        $info['status'] = ($notify['return_code'] == 'SUCCESS') ? true : false;
-        $info['money'] = $notify['total_fee']/100;
+        $info['status'] = ('SUCCESS' == $notify['return_code']) ? true : false;
+        $info['money'] = $notify['total_fee'] / 100;
         //商户订单号
         $info['outTradeNo'] = $notify['out_trade_no'];
         //微信交易号
