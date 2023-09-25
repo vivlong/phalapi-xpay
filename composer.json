@@ -18,5 +18,8 @@
 		"psr-4": {
 			"PhalApi\\Xpay\\": "src"
 		}
+	},
+	"require": {
+		"alipaysdk/easysdk": "2.0"
 	}
 }
