@@ -6,7 +6,7 @@
 		"phalapi", "phalapi-xpay", "xpay"
 	],
 	"license": "MulanPSL-2.0",
-	"minimum-stability": "stable",
+	"minimum-stability": "dev",
 	"homepage": "https://www.phalapi.net/",
 	"authors": [{
 		"name": "vivlong",
@@ -20,6 +20,6 @@
 		}
 	},
 	"require": {
-		"alipaysdk/easysdk": "2.0"
+		"alipaysdk/easysdk": "2.0.0"
 	}
 }
